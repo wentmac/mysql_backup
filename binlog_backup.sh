@@ -6,8 +6,8 @@
 # ${db_host} is mysql host   
 # —————————–  
 #/root/mysql_backup.sh
-# everyday 3:00 AM execute database backup
-#0 3 * * * /root/binlog_backup.sh
+# every 30 minute AM execute database backup
+# */30 * * * * /root/mysql_backup.sh
 #/etc/cron.daily
 #最好放在从库中去备份，可以防止主库在备份时的锁表
 
@@ -31,7 +31,7 @@ clientPath="/home/backup/mysqlbinlog"
 ###定义要镜像的本地文件目录路径 源服务器（必须是绝对路径）###
 serverPath=${backup_dir}
 ###定义生产环境的ip###
-web_ip="114.113.153.141"
+web_ip="192.168.0.2"
 
 # date format for backup file (dd-mm-yyyy)  #
 time="$(date +"%Y-%m-%d")"

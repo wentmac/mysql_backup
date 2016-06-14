@@ -7,17 +7,17 @@
 # —————————–  
 #/root/mysql_backup.sh
 # everyday 3:00 AM execute database backup
-#3 0 * * * /root/mysql_backup.sh
+# 0 3 * * * /root/mysql_backup.sh
 #/etc/cron.daily
 
 db_user="backup"
-db_password="8H2QQQBEwe02yLO3Dypp"
+db_password="8H2QQQBEypp"
 db_host="localhost"
 # the directory for story your backup file.  #
 backup_dir="/home/backup/mysql/"
 # 要备份的数据库名 #
 #all_db="$(${mysql} -u ${db_user} -h ${db_host} -p${db_password} -Bse 'show databases')" #
-all_db="kuailezu "
+all_db="dbname"
 
 # 要保留的备份天数 #
 backup_day=10
@@ -36,7 +36,7 @@ clientPath="/home/backup/mysql"
 ###定义要镜像的本地文件目录路径 源服务器（必须是绝对路径）###
 serverPath=${backup_dir}
 ###定义生产环境的ip###
-web_ip="127.0.0.1"
+web_ip="192.168.0.2"
 
 # date format for backup file (dd-mm-yyyy)  #
 time="$(date +"%Y-%m-%d")"
