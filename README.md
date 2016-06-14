@@ -1,0 +1,2 @@
+# mysql_backup
+mysql数据库定时增量和全量备份的shell
