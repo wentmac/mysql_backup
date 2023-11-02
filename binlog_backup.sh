@@ -4,33 +4,33 @@
 # ${db_user} is mysql username  
 # ${db_password} is mysql password  
 # ${db_host} is mysql host   
-# ¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¨C  
+# â€”â€”â€”â€”â€”â€”â€”â€”â€”â€“  
 #/root/mysql_backup.sh
 # every 30 minute AM execute database backup
 # */30 * * * * /root/mysql_backup.sh
 #/etc/cron.daily
-#×îºÃ·ÅÔÚ´Ó¿âÖÐÈ¥±¸·Ý£¬¿ÉÒÔ·ÀÖ¹Ö÷¿âÔÚ±¸·ÝÊ±µÄËø±í
+#æœ€å¥½æ”¾åœ¨ä»Žåº“ä¸­åŽ»å¤‡ä»½ï¼Œå¯ä»¥é˜²æ­¢ä¸»åº“åœ¨å¤‡ä»½æ—¶çš„é”è¡¨
 
 # the directory for story your backup file.  #
 backup_dir="/var/log/mysql/binlog/"
 
-# Òª±£ÁôµÄ±¸·ÝÌìÊý #
+# è¦ä¿ç•™çš„å¤‡ä»½å¤©æ•° #
 backup_day=10
 
-#Êý¾Ý¿â±¸·ÝÈÕÖ¾ÎÄ¼þ´æ´¢µÄÂ·¾¶
+#æ•°æ®åº“å¤‡ä»½æ—¥å¿—æ–‡ä»¶å­˜å‚¨çš„è·¯å¾„
 logfile="/var/log/binlog_backup.log"
 
-###ssh¶Ë¿ÚºÅ###
+###sshç«¯å£å·###
 ssh_port=1204
-###¶¨Òåssh auto keyµÄÎÄ¼þ###
+###å®šä¹‰ssh auto keyçš„æ–‡ä»¶###
 id_rsa=/root/auth_key/id_rsa_153.141.rsa
-###¶¨Òåssh auto username###
+###å®šä¹‰ssh auto username###
 id_rsa_user=rsync
-###¶¨ÒåÒªÍ¬²½µÄÔ¶³Ì·þÎñÆ÷µÄÄ¿Â¼Â·¾¶£¨±ØÐëÊÇ¾ø¶ÔÂ·¾¶£©###
+###å®šä¹‰è¦åŒæ­¥çš„è¿œç¨‹æœåŠ¡å™¨çš„ç›®å½•è·¯å¾„ï¼ˆå¿…é¡»æ˜¯ç»å¯¹è·¯å¾„ï¼‰###
 clientPath="/home/backup/mysqlbinlog"
-###¶¨ÒåÒª¾µÏñµÄ±¾µØÎÄ¼þÄ¿Â¼Â·¾¶ Ô´·þÎñÆ÷£¨±ØÐëÊÇ¾ø¶ÔÂ·¾¶£©###
+###å®šä¹‰è¦é•œåƒçš„æœ¬åœ°æ–‡ä»¶ç›®å½•è·¯å¾„ æºæœåŠ¡å™¨ï¼ˆå¿…é¡»æ˜¯ç»å¯¹è·¯å¾„ï¼‰###
 serverPath=${backup_dir}
-###¶¨ÒåÉú²ú»·¾³µÄip###
+###å®šä¹‰ç”Ÿäº§çŽ¯å¢ƒçš„ip###
 web_ip="192.168.0.2"
 
 # date format for backup file (dd-mm-yyyy)  #
@@ -42,24 +42,24 @@ test ! -d ${backup_dir} && mkdir -p ${backup_dir}
 delete_old_backup()
 {    
     echo "delete old binlog file:" >>${logfile}
-    # É¾³ý¾ÉµÄ±¸·Ý ²éÕÒ³öµ±Ç°Ä¿Â¼ÏÂÆßÌìÇ°Éú³ÉµÄÎÄ¼þ£¬²¢½«Ö®É¾³ý
+    # åˆ é™¤æ—§çš„å¤‡ä»½ æŸ¥æ‰¾å‡ºå½“å‰ç›®å½•ä¸‹ä¸ƒå¤©å‰ç”Ÿæˆçš„æ–‡ä»¶ï¼Œå¹¶å°†ä¹‹åˆ é™¤
     find ${backup_dir} -type f -mtime +${backup_day} | tee delete_binlog_list.log | xargs rm -rf
     cat delete_binlog_list.log >>${logfile}
 }
 
 rsync_mysql_binlog()
 {
-    # rsync Í¬²½µ½ÆäËûServerÖÐ #
+    # rsync åŒæ­¥åˆ°å…¶ä»–Serverä¸­ #
     for j in ${web_ip}
     do                
         echo "mysql_binlog_rsync to ${j} begin at "$(date +'%Y-%m-%d %T') >>${logfile}
-        ### Í¬²½ ###
+        ### åŒæ­¥ ###
         rsync -avz --progress --delete --include="mysql-bin.*" --exclude="*" $serverPath -e "ssh -p "${ssh_port}" -i "${id_rsa} ${id_rsa_user}@${j}:$clientPath >>${logfile} 2>&1 
         echo "mysql_binlog_rsync to ${j} done at "$(date +'%Y-%m-%d %T') >>${logfile}
     done
 }
 
-#½øÈëÊý¾Ý¿â±¸·ÝÎÄ¼þÄ¿Â¼
+#è¿›å…¥æ•°æ®åº“å¤‡ä»½æ–‡ä»¶ç›®å½•
 cd ${backup_dir}
 
 #delete_old_backup
@@ -67,5 +67,3 @@ rsync_mysql_binlog
 
 echo -e "========================mysql binlog backup && rsync done at "$(date +'%Y-%m-%d %T')"============================\n\n">>${logfile}
 cat ${logfile}
-
-
